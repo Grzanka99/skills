@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fleet"
+  short_description: "Resolve and access personal remote machines"
+  default_prompt: "Use $fleet to inspect or work with one of my remote machines."
