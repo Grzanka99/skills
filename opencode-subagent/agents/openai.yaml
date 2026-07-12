@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenCode Subagent"
+  short_description: "Delegate bounded tasks to OpenCode models"
+  default_prompt: "Use $opencode-subagent to delegate this bounded task to an OpenCode model."
