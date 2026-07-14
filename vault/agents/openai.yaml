@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vault"
+  short_description: "Manage your Obsidian second brain"
+  default_prompt: "Use $vault to save this in my second brain."
