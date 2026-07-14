@@ -1,0 +1,7 @@
+interface:
+  display_name: "Orchestrate"
+  short_description: "Delegate implementation and review"
+  default_prompt: "Use $orchestrate to implement this request with worker and review subagents."
+
+policy:
+  allow_implicit_invocation: false
