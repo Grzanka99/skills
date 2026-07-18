@@ -1,6 +1,6 @@
 ---
 name: planning
-description: Plans: use when creating or maintaining documents in plans/<plan-name>/.
+description: "Plans: use when creating or maintaining documents in plans/<plan-name>/"
 ---
 
 # Planning Skill
