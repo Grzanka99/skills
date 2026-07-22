@@ -14,9 +14,10 @@ Keep the parent as the control plane. Keep it read-only for implementation files
    - Read a plan file before using it.
    - Ask one focused question only when the goal, scope, or completion checks cannot be inferred.
    - Complete when the goal, scope, and completion checks are clear.
+   - Split the plan into focused tasks
 
 2. Split the work.
-   - Use one worker by default.
+   - Use one worker at the time by default.
    - Run workers in parallel only when packets have independent dependencies, separate ownership, and separate checks.
    - Use the fewest workers needed.
    - Complete when every requirement has an owner and dependencies are ordered.
