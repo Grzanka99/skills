@@ -1,0 +1,7 @@
+interface:
+  display_name: "No War in Ba Sing Se"
+  short_description: "Remove rules for impossible behavior"
+  default_prompt: "Use $no-war-in-basingse to audit this target for rules about behavior that cannot happen."
+
+policy:
+  allow_implicit_invocation: false

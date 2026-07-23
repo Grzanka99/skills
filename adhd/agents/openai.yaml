@@ -1,0 +1,4 @@
+interface:
+  display_name: "ADHD Mode"
+  short_description: "Keep responses terse and direct"
+  default_prompt: "Use $adhd to keep responses short for this conversation."
