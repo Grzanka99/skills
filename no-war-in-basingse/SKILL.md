@@ -1,41 +1,46 @@
 ---
 name: no-war-in-basingse
-description: Use ONLY when the user says "no forest", "basingse rule", "no war in basingse", or explicitly asks for a basingse/no-forest check. Finds rules that mention things which cannot happen in the target.
+description: Use ONLY when the user says "no forest", "basingse rule", "no war in basingse", or explicitly asks for a basingse/no-forest check. Finds rules for impossible behavior.
 ---
 
 # no-war-in-basingse
 
-Audit the target the user points at.
+Audit user-selected instructions, comments, documents, tests, or code.
 
-Use this on instructions, comments, docs, tests, or code.
+## Procedure
 
-## The test
+For each relevant line:
 
-Check each relevant line:
+1. **Can this happen in the current intended product?**
+   Check schema, types, code, and product structure.
+2. **If no, delete the line.**
+   Do not rewrite or explain it.
+   If a test names an absent concept, delete the test. Do not test absence.
+3. **If yes, state the wanted behavior.**
+   Use a ban only when safer or clearer.
 
-1. **Can this happen here?**
-   Check schema, types, code, product shape, and surrounding context.
-2. **If it cannot happen, remove the line.**
-   No rewrite. No softened version. No explanation in the target.
-3. **If it can happen but is written as a ban, prefer the positive behavior.**
-   Keep the ban only when the positive version loses safety or clarity.
+## Tests
+
+- Test current product behavior, not history.
+- Remove tests, fixtures, mocks, assertions, and bug reproductions for removed concepts.
+- Keep negative tests only for invalid input still possible at a current product boundary.
+
+Forest removed: test current land use. Do not test missing forest or trees.
 
 ## Example
 
-Schema has no `status` field:
+No `status` field:
 
 > Do not output task status.
 
-Delete it. `status` is dead.
+Delete the instruction.
 
-Real risk:
+Possible risk:
 
 > Never commit secrets to the repo.
 
-Prefer: `Store secrets in the vault; keep them out of commits.`
-
-Keep the ban if that is clearer.
+Rewrite: `Store secrets in the vault. Keep secrets out of commits.`
 
 ## Completion
 
-Classify every relevant line as clean, impossible, rewritten, or kept as a hard guardrail.
+Classify each relevant line: valid, impossible, rewritten, or safety ban.
