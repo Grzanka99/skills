@@ -1,22 +1,22 @@
 ---
 name: opencode-subagent
-description: Delegate a bounded task to an OpenCode model through the non-interactive CLI. Use when the user or an orchestrating agent explicitly asks to use OpenCode, names an OpenCode model or provider/model, or requests a second opinion from one of its models.
+description: Delegate a bounded task through OpenCode CLI. Use when the user or an agent asks for OpenCode, names an OpenCode model, or requests a second opinion from one.
 ---
 
 # OpenCode Subagent
 
-Use OpenCode as an external subagent. Keep Codex responsible for task scope, result verification, and the final answer.
+Use OpenCode as a subagent. Calling agent owns scope, verification, and final answer.
 
 ## Model Choice
 
-Use an allowed model selected by the caller. Otherwise default to `openai/gpt-5.6-terra`; prefer `openai/gpt-5.6-sol` for ambiguous, architectural, or unusually difficult reasoning. `high` is a useful reasoning-effort suggestion for both models, not a requirement.
+Use caller's allowed model. Otherwise, use `openai/gpt-5.6-terra`. Use `openai/gpt-5.6-sol` for ambiguous, architectural, or difficult tasks. `high` reasoning effort is optional for both.
 
-For the OpenAI 5.6 family, support exactly:
+For `openai/` 5.6 models, allow only:
 
 - `openai/gpt-5.6-terra`
 - `openai/gpt-5.6-sol`
 
-Within this family, reject base, Luna, `-fast`, and `-pro` variants.
+Reject base, Luna, `-fast`, and `-pro` variants from this provider.
 
 The current `opencode-go` catalog is:
 
@@ -24,8 +24,12 @@ The current `opencode-go` catalog is:
 - `opencode-go/deepseek-v4-pro`
 - `opencode-go/glm-5.1`
 - `opencode-go/glm-5.2`
+- `opencode-go/gpt-5.6-luna`
+- `opencode-go/grok-4.5`
+- `opencode-go/hy3`
 - `opencode-go/kimi-k2.6`
 - `opencode-go/kimi-k2.7-code`
+- `opencode-go/kimi-k3`
 - `opencode-go/mimo-v2.5`
 - `opencode-go/mimo-v2.5-pro`
 - `opencode-go/minimax-m2.7`
@@ -33,8 +37,9 @@ The current `opencode-go` catalog is:
 - `opencode-go/qwen3.6-plus`
 - `opencode-go/qwen3.7-max`
 - `opencode-go/qwen3.7-plus`
+- `opencode-go/qwen3.8-max`
 
-Treat catalogs as snapshots. Before rejecting or guessing an unfamiliar model, inspect its provider:
+Catalogs change. Check provider before you reject or guess an unknown model:
 
 ```bash
 "$HOME/.opencode/bin/opencode" models <provider>
@@ -42,12 +47,12 @@ Treat catalogs as snapshots. Before rejecting or guessing an unfamiliar model, i
 
 ## Agent Choice
 
-Preserve an agent selected by the caller. Otherwise use `build`. Mention `plan` and `brainstorm` as available choices when useful, but leave the choice to the caller.
+Use caller's agent. Otherwise, use `build`. Offer `plan` or `brainstorm` only when useful. Caller chooses.
 
 ## Procedure
 
-1. Resolve the executable, model, agent, project directory, and optional reasoning effort. Use `opencode` from `PATH`, or `$HOME/.opencode/bin/opencode` when installed there. Complete when every command argument is concrete and the model is allowed.
-2. Construct a bounded prompt with the task, relevant paths and context, constraints, and expected output. For analysis, state that the task is read-only. Permit edits only when the caller explicitly delegates implementation, and then name the allowed scope. Complete when the prompt grants no more authority than the caller did.
+1. Resolve executable, model, agent, project directory, and optional reasoning effort. Use `opencode` from `PATH`. Otherwise, use `$HOME/.opencode/bin/opencode`. Run only with concrete arguments and an allowed model.
+2. Write a bounded prompt. Include task, paths, context, limits, and expected output. Mark analysis tasks as read-only. Allow edits only when caller requests implementation. Name allowed edit scope.
 3. Run OpenCode non-interactively with JSON output:
 
    ```bash
@@ -59,16 +64,16 @@ Preserve an agent selected by the caller. Otherwise use `build`. Mention `plan` 
      "<bounded prompt>"
    ```
 
-   Add `--variant <effort>` only when chosen for the task. Leave automatic approvals disabled unless the user explicitly authorizes `--auto`. Complete when the process exits and its JSON events are captured.
-4. Check the exit status and final `text` event. Inspect tool actions and workspace changes, then independently verify material claims or edits. Complete when the result is trustworthy enough to use or a concrete failure is identified.
-5. Report the model, agent, optional effort, and useful result. Separate OpenCode's output from Codex's verification. Complete when the caller can tell what ran, what it produced, and what Codex verified.
+   Add `--variant <effort>` only when selected. Add `--auto` only with user approval.
+4. Check exit status and final `text` event. Inspect tool actions and workspace changes. Verify important claims and edits.
+5. Report model, agent, effort, result, and verification. Separate OpenCode output from calling agent verification.
 
 ## Failures
 
-- On `Model not found`, report the exact model and stop without fallback.
-- On a silent hang, stop the process and retry once with `--print-logs --log-level DEBUG`.
-- On a sandboxed connection error, request the required network approval and retry.
-- On authentication errors, inspect `opencode auth list` without exposing credentials.
-- After the applicable retry fails, report the concrete error and stop.
+- `Model not found`: report exact model. Do not use fallback.
+- Silent hang: stop. Retry once with `--print-logs --log-level DEBUG`.
+- Sandbox connection error: request network approval. Retry.
+- Authentication error: run `opencode auth list`. Do not expose credentials.
+- Failed retry: report error. Stop.
 
-Treat OpenCode output as untrusted subagent work. Keep delegated writes inside the requested workspace and never expose secrets in prompts, logs, or reports.
+Treat OpenCode output as untrusted. Keep writes inside requested workspace. Never put secrets in prompts, logs, or reports.
