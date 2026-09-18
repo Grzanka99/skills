@@ -1,0 +1,7 @@
+interface:
+  display_name: "Learn"
+  short_description: "Save lessons from user corrections"
+  default_prompt: "Use $learn to save lesson from earlier mistake, correction, and accepted fix."
+
+policy:
+  allow_implicit_invocation: false
